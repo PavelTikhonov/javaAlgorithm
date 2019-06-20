@@ -1,3 +1,5 @@
+package lesson3;
+
 import lesson3.deque.DequeTest;
 import org.junit.Assert;
 import org.junit.Before;
