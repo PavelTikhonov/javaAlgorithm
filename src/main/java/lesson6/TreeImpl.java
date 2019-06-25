@@ -1,4 +1,4 @@
-package ru.geekbrains.datastructure.tree;
+package lesson6;
 
 import java.util.Stack;
 
@@ -6,12 +6,41 @@ public class TreeImpl<E extends Comparable<? super E>> implements Tree<E> {
 
     private Node<E> root;
     private int size;
+    private int currentDeep;
+    private int penultimateLevelCounter;
+    private static final int TREE_DEEP = 4;
+
+    @Override
+    public boolean isBalanced() {
+        if(penultimateLevelCounter < Math.pow(2, TREE_DEEP - 2)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int getTreeDeep() {
+        return TREE_DEEP;
+    }
+
+    @Override
+    public int getCurrentDeep() {
+        return currentDeep;
+    }
+
+    public void setCurrentDeep(int currentDeep) {
+        this.currentDeep = currentDeep;
+    }
 
     @Override
     public boolean add(E value) {
         Node<E> newNode = new Node<>(value);
+
         if (isEmpty()) {
             this.root = newNode;
+            newNode.setLevel(1);
+            setCurrentDeep(1);
+            size++;
             return true;
         }
 
@@ -21,12 +50,23 @@ public class TreeImpl<E extends Comparable<? super E>> implements Tree<E> {
         }
 
         Node<E> parent = nodeAndParent.parent;
+        if(parent.getLevel() == TREE_DEEP){
+            return false;
+        }
 
         assert parent != null;
         if (parent.shouldBeLeft(value)) {
             parent.setLeftChild(newNode);
+            newNode.setLevel(parent.getLevel() + 1);
+            if(newNode.getLevel() > getCurrentDeep()){
+                setCurrentDeep(newNode.getLevel());
+            }
         } else {
             parent.setRightChild(newNode);
+            newNode.setLevel(parent.getLevel() + 1);
+            if(newNode.getLevel() > getCurrentDeep()){
+                setCurrentDeep(newNode.getLevel());
+            }
         }
 
         size++;
@@ -197,6 +237,9 @@ public class TreeImpl<E extends Comparable<? super E>> implements Tree<E> {
         if (current == null) {
             return;
         }
+        if(current.getLevel() == TREE_DEEP - 1){
+            penultimateLevelCounter++;
+        }
 
         inOrder(current.getLeftChild());
         System.out.println(current);
@@ -259,4 +302,5 @@ public class TreeImpl<E extends Comparable<? super E>> implements Tree<E> {
             this.parent = parent;
         }
     }
+
 }

@@ -1,4 +1,4 @@
-package ru.geekbrains.datastructure.tree;
+package lesson6;
 
 public interface Tree<E> {
 
@@ -21,4 +21,8 @@ public interface Tree<E> {
     void traverse(TraverseMode mode);
 
     void display();
+    int getCurrentDeep();
+    int getTreeDeep();
+    boolean isBalanced();
+
 }

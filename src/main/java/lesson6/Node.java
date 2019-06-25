@@ -1,4 +1,4 @@
-package ru.geekbrains.datastructure.tree;
+package lesson6;
 
 public class Node<T extends Comparable<? super T>> {
 
@@ -6,7 +6,15 @@ public class Node<T extends Comparable<? super T>> {
 
     private Node<T> leftChild;
     private Node<T> rightChild;
+    private int level;
 
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
 
     public Node(T value) {
         this.value = value;

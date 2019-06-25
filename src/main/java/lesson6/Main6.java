@@ -1,27 +1,35 @@
-package ru.geekbrains.datastructure.tree;
+package lesson6;
 
 public class Main6 {
 
+    private static int countFalseAdding = 0;
+    private static int countBalanced = 0;
+
     public static void main(String[] args) {
-//        testTree();
-        Tree<Integer> tree = new TreeImpl<>();
-        tree.add(60);
-        tree.add(25);
-        tree.add(66);
-        tree.add(15);
-        tree.add(5);
-        tree.add(20);
-        tree.add(45);
-        tree.add(30);
-        tree.add(55);
-        tree.add(32);
 
-        tree.display();
+        for (int i = 0; i < 20; i++) {
+            Tree<Integer> tree = new TreeImpl<>();
+            while(tree.size() <= Math.pow(2, tree.getTreeDeep()) - 2){
+                if(tree.add((int)(Math.random() * 25))){
+                    countFalseAdding = 0;
+                } else {
+                    countFalseAdding++;
+                }
+                if(countFalseAdding > 100){
+                    break;
+                }
+            }
+            tree.traverse(Tree.TraverseMode.IN_ORDER);
+            if(tree.isBalanced()){
+                System.out.println("Balanced");
+                countBalanced++;
+            } else {
+                System.out.println("Not balanced");
+            }
+            tree.display();
 
-        tree.remove(25);
-
-        tree.display();
-
+        }
+        System.out.println("percent balanced  = " + countBalanced * 5 + "%");
 
     }
 
