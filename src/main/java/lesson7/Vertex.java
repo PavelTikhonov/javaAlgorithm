@@ -1,4 +1,4 @@
-package ru.geekbrains.datastructure.graph;
+package lesson7;
 
 import java.util.Objects;
 
@@ -6,6 +6,7 @@ public class Vertex {
 
     private final String label;
     private boolean visited;
+    int level;
 
     public Vertex(String label) {
         this.label = label;
