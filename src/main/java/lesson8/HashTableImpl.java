@@ -1,5 +1,9 @@
 package lesson8;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 public class HashTableImpl implements HashTable {
 
     private static class Entry {
@@ -20,18 +24,20 @@ public class HashTableImpl implements HashTable {
         }
     }
 
-
-    private Entry[] data;
+    private List<LinkedList<Entry>> dataRow;
     private int size;
     private int maxSize;
 
     public HashTableImpl(int maxSize) {
         this.maxSize = maxSize;
-        this.data = new Entry[maxSize * 2];
+        this.dataRow = new ArrayList<>(maxSize);
+        for (int i = 0; i < maxSize; i++) {
+            dataRow.add(new LinkedList<>());
+        }
     }
 
     private int hashFunc(Item key) {
-        return key.hashCode() % data.length;
+        return key.hashCode() % this.maxSize;
     }
 
     @Override
@@ -40,68 +46,44 @@ public class HashTableImpl implements HashTable {
             return false;
         }
 
-        int count = 0;
-
-        int index = hashFunc(item);
-        while (data[index] != null) {
-            if (data[index].key.equals(item)) {
-                data[index].value = cost;
-                return true;
-            }
-
-            if (count >= data.length) {
-                return false;
-            }
-
-            index += getStep(item);
-            count++;
-            index %= data.length;
-        }
-
-        data[index] = new Entry(item, cost);
-        size++;
-
+        int rowIndex = hashFunc(item);
+        dataRow.get(rowIndex).add(new Entry(item, cost));
         return true;
-    }
-
-    protected int getStep(Item item) {
-        return 1;
     }
 
     @Override
     public Integer get(Item item) {
-        int index = indexOf(item);
-        return index != -1 ? data[index].value : null;
+
+        int rowIndex = hashFunc(item);
+        int index = indexOf(item, rowIndex);
+        return index != -1 ? dataRow.get(rowIndex).get(index).value : null;
     }
 
 
     @Override
     public boolean remove(Item item) {
-        int index = indexOf(item);
-        if (index != -1) {
-            data[index] = null;
-            size--;
+        int rowIndex = hashFunc(item);
+        int index = indexOf(item, rowIndex);
+        if(index != -1){
+            dataRow.get(rowIndex).remove(index);
             return true;
         }
-
         return false;
     }
 
-    private int indexOf(Item item) {
-        int index = hashFunc(item);
+    private int indexOf(Item item, int rowIndex) {
+
         int count = 0;
-
-        while (data[index] != null && count < data.length) {
-            Entry entry = data[index];
+        while(dataRow.get(rowIndex).get(count) != null){
+            Entry entry = dataRow.get(rowIndex).get(count);
             if (entry.key.equals(item)) {
-                return index;
+                return count;
             }
-
-            index += getStep(item);
-            index %= data.length;
             count++;
+            if (count == dataRow.get(rowIndex).size()){
+                return -1;
+            }
         }
-
         return -1;
     }
 
@@ -118,10 +100,11 @@ public class HashTableImpl implements HashTable {
     @Override
     public void display() {
         System.out.println("-----------");
-        for (int i = 0; i < data.length; i++) {
-            System.out.printf("%d = [%s]", i, data[i]);
+        for (LinkedList<Entry> row: dataRow) {
+            for (Entry entry: row) {
+                System.out.print("[" + entry.key.getTitle() + ", " + entry.value + "]");
+            }
             System.out.println();
         }
-        System.out.println("-----------");
     }
 }

@@ -1,13 +1,9 @@
 package lesson8;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class Main8 {
 
     public static void main(String[] args) {
         HashTable hashTable = new HashTableImpl(5);//5 * 2 = 10
-//        HashTable hashTable = new DoubleHashTableImpl(5);//5 * 2 = 10
 
         hashTable.put(new Item(1, "Orange"), 150);
         hashTable.put(new Item(77, "Banana"), 100);
